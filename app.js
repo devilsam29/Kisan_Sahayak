@@ -8,9 +8,15 @@ const user = {
 };
 
 
+// ================= BACKEND URL =================
+
+// Abhi backend laptop par chal raha hai
+const API_URL = "http://127.0.0.1:8000";
+
+
 // ================= SEND OTP / CONTINUE =================
 
-function sendOTP() {
+async function sendOTP() {
 
   const name = document.getElementById("name").value.trim();
   const mobile = document.getElementById("mobile").value.trim();
@@ -35,23 +41,62 @@ function sendOTP() {
   user.mobile = mobile;
   user.language = language;
 
-  // Show last 4 digits on OTP screen
-  document.getElementById("otpMobile").textContent =
-    "******" + mobile.slice(-4);
+  // Convert 10 digit Indian number to +91 format
+  const phone = "+91" + mobile;
 
-  // Clear old OTP
-  document.getElementById("otpInput").value = "";
+  try {
 
-  // Go to OTP screen
-  showScreen("otp");
+    showMessage("Sending OTP...");
 
-  console.log("OTP sent to:", mobile);
+    const response = await fetch(`${API_URL}/send-otp`, {
+
+      method: "POST",
+
+      headers: {
+        "Content-Type": "application/json"
+      },
+
+      body: JSON.stringify({
+        phone: phone
+      })
+
+    });
+
+    const data = await response.json();
+
+    // Backend error
+    if (!response.ok) {
+      throw new Error(data.detail || "Failed to send OTP");
+    }
+
+    // Show last 4 digits on OTP screen
+    document.getElementById("otpMobile").textContent =
+      "******" + mobile.slice(-4);
+
+    // Clear old OTP
+    document.getElementById("otpInput").value = "";
+
+    // Go to OTP screen
+    showScreen("otp");
+
+    showMessage("OTP generated successfully!");
+
+    console.log("OTP response:", data);
+
+  } catch (error) {
+
+    console.error("Send OTP Error:", error);
+
+    showMessage(
+      "Unable to send OTP. Please check backend."
+    );
+  }
 }
 
 
 // ================= VERIFY OTP =================
 
-function verifyOTP() {
+async function verifyOTP() {
 
   const otp = document.getElementById("otpInput").value.trim();
 
@@ -61,19 +106,53 @@ function verifyOTP() {
     return;
   }
 
-  // DEMO OTP
-  if (otp !== "123456") {
-    showMessage("Invalid OTP. Use 123456 for demo.");
-    return;
+  const phone = "+91" + user.mobile;
+
+  try {
+
+    showMessage("Verifying OTP...");
+
+    const response = await fetch(`${API_URL}/verify-otp`, {
+
+      method: "POST",
+
+      headers: {
+        "Content-Type": "application/json"
+      },
+
+      body: JSON.stringify({
+        phone: phone,
+        otp: otp
+      })
+
+    });
+
+    const data = await response.json();
+
+    // Backend error
+    if (!response.ok) {
+      throw new Error(data.detail || "Invalid OTP");
+    }
+
+    // Login successful
+    console.log("Login response:", data);
+
+    // Load farmer information
+    loadUserData();
+
+    // Go to home
+    showScreen("home");
+
+    showMessage("Login successful! 🎉");
+
+  } catch (error) {
+
+    console.error("Verify OTP Error:", error);
+
+    showMessage(
+      error.message || "Invalid OTP. Please try again."
+    );
   }
-
-  // Load farmer information
-  loadUserData();
-
-  // Go to home
-  showScreen("home");
-
-  showMessage("Login successful!");
 }
 
 
@@ -112,10 +191,14 @@ function showScreen(screenName) {
   // Bottom navigation
   const nav = document.getElementById("bottomNav");
 
-  if (screenName === "login" || screenName === "otp") {
-    nav.style.display = "none";
-  } else {
-    nav.style.display = "flex";
+  if (nav) {
+
+    if (screenName === "login" || screenName === "otp") {
+      nav.style.display = "none";
+    } else {
+      nav.style.display = "flex";
+    }
+
   }
 
   // Update active navigation button
@@ -162,6 +245,7 @@ function closeQR() {
 
 
 // Close QR when clicking outside
+
 document.addEventListener("click", function(event) {
 
   const modal = document.getElementById("qrModal");
@@ -217,12 +301,15 @@ function showMessage(message) {
   }
 
   toast.textContent = message;
+
   toast.classList.add("show");
 
   clearTimeout(toastTimer);
 
   toastTimer = setTimeout(() => {
+
     toast.classList.remove("show");
+
   }, 3000);
 }
 
@@ -236,10 +323,12 @@ document.addEventListener("DOMContentLoaded", function() {
     document.getElementById("continueBtn");
 
   if (continueBtn) {
+
     continueBtn.addEventListener(
       "click",
       sendOTP
     );
+
   }
 
 
@@ -248,10 +337,12 @@ document.addEventListener("DOMContentLoaded", function() {
     document.getElementById("verifyBtn");
 
   if (verifyBtn) {
+
     verifyBtn.addEventListener(
       "click",
       verifyOTP
     );
+
   }
 
 
@@ -260,10 +351,12 @@ document.addEventListener("DOMContentLoaded", function() {
     document.getElementById("resendBtn");
 
   if (resendBtn) {
+
     resendBtn.addEventListener(
       "click",
       sendOTP
     );
+
   }
 
 
