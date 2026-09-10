@@ -11,496 +11,769 @@
 
 <div class="app">
 
-  <!-- ================= LOGIN ================= -->
-  <section id="login" class="screen active">
-    <div class="login-box">
+<!-- ================= LOGIN ================= -->
+<section id="login" class="screen active">
+  <div class="login-box">
 
-      <div class="logo">🌾</div>
+    <div class="logo">🌾</div>
+    <h1>KisanProcure</h1>
+    <p class="subtitle">Farmer Procurement Portal</p>
 
-      <h1>KisanProcure</h1>
-      <p class="subtitle">Farmer Procurement Portal</p>
+    <div class="form">
 
-      <div class="form">
+      <label>Full Name</label>
+      <input id="name" type="text" placeholder="Enter your full name">
 
-        <label>Full Name</label>
-        <input
-          id="name"
-          type="text"
-          placeholder="Enter your full name"
-        >
+      <label>Mobile Number</label>
+      <input id="mobile" type="tel" maxlength="10"
+             placeholder="Enter 10-digit mobile number">
 
-        <label>Mobile Number</label>
-        <input
-          id="mobile"
-          type="tel"
-          maxlength="10"
-          placeholder="Enter 10-digit mobile number"
-        >
+      <label>Language</label>
+      <select id="language">
+        <option value="en">English</option>
+        <option value="hi">हिन्दी</option>
+      </select>
 
-        <label>Language</label>
-        <select id="language">
-          <option value="en">English</option>
-          <option value="hi">हिन्दी</option>
-        </select>
-
-        <button onclick="sendOTP()">
-          Continue
-        </button>
-
-      </div>
-
-      <p class="login-note">
-        Your mobile number will be used for OTP verification.
-      </p>
-
-    </div>
-  </section>
-
-
-  <!-- ================= OTP ================= -->
-  <section id="otp" class="screen">
-
-    <div class="login-box">
-
-      <div class="logo">🔐</div>
-
-      <h2>Verify Mobile</h2>
-
-      <p class="subtitle">
-        OTP sent to <strong id="otpMobile"></strong>
-      </p>
-
-      <input
-        id="otpInput"
-        class="otp-input"
-        type="tel"
-        maxlength="6"
-        placeholder="Enter 6-digit OTP"
-      >
-
-      <button onclick="verifyOTP()">
-        Verify OTP
-      </button>
-
-      <button class="secondary" onclick="sendOTP()">
-        Resend OTP
-      </button>
-
-      <p class="demo">
-        Demo OTP: <strong>123456</strong>
-      </p>
+      <button onclick="sendOTP()">Continue</button>
 
     </div>
 
-  </section>
+    <p class="login-note">
+      Your mobile number will be used for OTP verification.
+    </p>
+
+  </div>
+</section>
 
 
-  <!-- ================= HOME ================= -->
-  <section id="home" class="screen">
+<!-- ================= OTP ================= -->
+<section id="otp" class="screen">
 
-    <header class="topbar">
-      <div>
-        <small>Welcome</small>
-        <h2 id="welcomeName">Namaste 👋</h2>
-      </div>
+  <div class="login-box">
 
-      <div class="profile">👨‍🌾</div>
-    </header>
+    <div class="logo">🔐</div>
+
+    <h2>Verify Mobile</h2>
+
+    <p class="subtitle">
+      OTP sent to <strong id="otpMobile"></strong>
+    </p>
+
+    <input id="otpInput" class="otp-input"
+           type="tel" maxlength="6"
+           placeholder="Enter 6-digit OTP">
+
+    <button onclick="verifyOTP()">Verify OTP</button>
+
+    <button class="secondary" onclick="sendOTP()">Resend OTP</button>
+
+    <p class="demo">
+      Demo OTP: <strong>123456</strong>
+    </p>
+
+  </div>
+
+</section>
 
 
-    <div class="alert">
-      <strong>📢 Important</strong>
+<!-- ================= PROCUREMENT ================= -->
+<section id="procurement" class="screen">
+
+  <header class="page-header">
+    <h2>🌾 Wheat Procurement</h2>
+    <p>Enter your crop details to join the queue</p>
+  </header>
+
+  <div class="card">
+
+    <h3>Procurement Details</h3>
+
+    <label>Wheat Type</label>
+
+    <select id="wheatType" onchange="calculateBill()">
+      <option value="">Select wheat variety</option>
+      <option value="HD-2967">HD-2967</option>
+      <option value="HD-3086">HD-3086</option>
+      <option value="DBW-187">DBW-187</option>
+      <option value="Other">Other</option>
+    </select>
+
+    <label>Quantity (Quintal)</label>
+
+    <input id="quantity"
+           type="number"
+           min="1"
+           placeholder="Enter quantity"
+           oninput="calculateBill()">
+
+    <div class="bill-box">
+
       <p>
-        Your procurement schedule is available.
-        Please check your slot.
+        Rate:
+        <strong>₹<span id="rate">0</span></strong>
+        / Quintal
       </p>
+
+      <p>
+        Total Bill:
+        <strong>₹<span id="totalBill">0</span></strong>
+      </p>
+
     </div>
 
+    <button onclick="joinQueue()">
+      🎫 Join Procurement Queue
+    </button>
 
-    <div class="card farmer-card">
+  </div>
+
+</section>
+
+
+<!-- ================= HOME ================= -->
+<section id="home" class="screen">
+
+  <header class="topbar">
+
+    <div>
+      <small>Welcome</small>
+      <h2 id="welcomeName">Namaste 👋</h2>
+    </div>
+
+    <div class="profile">👨‍🌾</div>
+
+  </header>
+
+
+  <div class="alert">
+
+    <strong>📢 Procurement Queue</strong>
+
+    <p id="queueMessage">
+      Enter your wheat details to get your token.
+    </p>
+
+  </div>
+
+
+  <div class="card farmer-card">
+
+    <div>
+      <small>Farmer ID</small>
+      <h3 id="farmerId">KF-20481</h3>
+    </div>
+
+    <div class="verified">
+      ✓ Verified
+    </div>
+
+  </div>
+
+
+  <h3 class="section-title">Today's Overview</h3>
+
+
+  <div class="grid">
+
+    <div class="stat-card">
+      <span>🌾</span>
+      <small>Wheat</small>
+      <strong id="homeWheat">-</strong>
+    </div>
+
+    <div class="stat-card">
+      <span>⚖️</span>
+      <small>Quantity</small>
+      <strong id="homeQuantity">-</strong>
+    </div>
+
+    <div class="stat-card">
+      <span>🎫</span>
+      <small>Token</small>
+      <strong id="homeToken">-</strong>
+    </div>
+
+    <div class="stat-card">
+      <span>💰</span>
+      <small>Payment</small>
+      <strong id="homeBill">₹0</strong>
+    </div>
+
+  </div>
+
+
+  <!-- QUEUE CARD -->
+
+  <div class="card schedule-card">
+
+    <div class="card-heading">
 
       <div>
-        <small>Farmer ID</small>
-        <h3 id="farmerId">KF-20481</h3>
+        <small>Your Queue Position</small>
+        <h3 id="homeQueue">Waiting</h3>
       </div>
 
-      <div class="verified">
-        ✓ Verified
-      </div>
+      <span class="badge green">In Queue</span>
 
     </div>
 
+    <p>
+      Estimated Turn:
+      <strong id="homeTurn">-</strong>
+    </p>
 
-    <h3 class="section-title">Today's Overview</h3>
+    <button onclick="showScreen('procurement')">
+      New Procurement
+    </button>
 
-    <div class="grid">
+    <button onclick="showQR()">
+      View QR Token
+    </button>
 
-      <div class="stat-card">
-        <span>🌾</span>
-        <small>Crop</small>
-        <strong>Wheat</strong>
-      </div>
-
-      <div class="stat-card">
-        <span>⚖️</span>
-        <small>Quantity</small>
-        <strong>42 Quintal</strong>
-      </div>
-
-      <div class="stat-card">
-        <span>🎫</span>
-        <small>Token</small>
-        <strong>#42</strong>
-      </div>
-
-      <div class="stat-card">
-        <span>💰</span>
-        <small>Payment</small>
-        <strong>₹1,12,500</strong>
-      </div>
-
-    </div>
+  </div>
 
 
-    <div class="card schedule-card">
+  <div class="card">
 
-      <div class="card-heading">
-        <div>
-          <small>Procurement Slot</small>
-          <h3>Today, 10:00 AM</h3>
-        </div>
+    <h3>Quick Actions</h3>
 
-        <span class="badge green">Confirmed</span>
-      </div>
+    <div class="actions">
 
-      <p>Government Procurement Centre</p>
+      <button onclick="showScreen('schedule')">
+        📅<span>Schedule</span>
+      </button>
 
-      <button onclick="showQR()">
-        View QR Token
+      <button onclick="showScreen('status')">
+        📦<span>Status</span>
+      </button>
+
+      <button onclick="enableSMS()">
+        🔔<span>SMS Alerts</span>
       </button>
 
     </div>
 
+  </div>
 
-    <div class="card">
+</section>
 
-      <h3>Quick Actions</h3>
 
-      <div class="actions">
+<!-- ================= SCHEDULE ================= -->
+<section id="schedule" class="screen">
 
-        <button onclick="showScreen('schedule')">
-          📅<span>Schedule</span>
-        </button>
+  <header class="page-header">
+    <h2>Procurement Schedule</h2>
+    <p>Your procurement queue</p>
+  </header>
 
-        <button onclick="showScreen('status')">
-          📦<span>Status</span>
-        </button>
 
-        <button onclick="enableSMS()">
-          🔔<span>SMS Alerts</span>
-        </button>
+  <div class="card schedule-item">
 
-      </div>
-
+    <div class="date-box">
+      <strong id="scheduleQueue">-</strong>
+      <small>QUEUE</small>
     </div>
 
-  </section>
+    <div class="schedule-info">
 
+      <h3>Wheat Procurement</h3>
 
-  <!-- ================= SCHEDULE ================= -->
-  <section id="schedule" class="screen">
-
-    <header class="page-header">
-      <h2>Procurement Schedule</h2>
-      <p>Your upcoming procurement slots</p>
-    </header>
-
-
-    <div class="card schedule-item">
-
-      <div class="date-box">
-        <strong>12</strong>
-        <small>SEP</small>
-      </div>
-
-      <div class="schedule-info">
-        <h3>Wheat Procurement</h3>
-        <p>10:00 AM – 12:00 PM</p>
-        <p>📍 Government Procurement Centre</p>
-      </div>
-
-      <span class="badge green">Confirmed</span>
-
-    </div>
-
-
-    <div class="card schedule-item">
-
-      <div class="date-box">
-        <strong>18</strong>
-        <small>SEP</small>
-      </div>
-
-      <div class="schedule-info">
-        <h3>Additional Slot</h3>
-        <p>11:00 AM – 01:00 PM</p>
-        <p>📍 Government Procurement Centre</p>
-      </div>
-
-      <span class="badge orange">Pending</span>
-
-    </div>
-
-
-    <button onclick="requestSlot()">
-      + Request New Slot
-    </button>
-
-  </section>
-
-
-  <!-- ================= STATUS ================= -->
-  <section id="status" class="screen">
-
-    <header class="page-header">
-      <h2>Procurement Status</h2>
-      <p>Track your crop procurement</p>
-    </header>
-
-
-    <div class="card status-card">
-
-      <div class="status-header">
-        <div>
-          <small>Token Number</small>
-          <h1>#42</h1>
-        </div>
-
-        <span class="badge green">
-          In Progress
-        </span>
-      </div>
-
-
-      <div class="timeline">
-
-        <div class="timeline-item done">
-          <span>✓</span>
-          <div>
-            <strong>Registration Complete</strong>
-            <small>Completed</small>
-          </div>
-        </div>
-
-        <div class="timeline-item done">
-          <span>✓</span>
-          <div>
-            <strong>Slot Confirmed</strong>
-            <small>Today, 08:30 AM</small>
-          </div>
-        </div>
-
-        <div class="timeline-item current">
-          <span>●</span>
-          <div>
-            <strong>Crop Verification</strong>
-            <small>Currently processing</small>
-          </div>
-        </div>
-
-        <div class="timeline-item">
-          <span>○</span>
-          <div>
-            <strong>Procurement</strong>
-            <small>Pending</small>
-          </div>
-        </div>
-
-        <div class="timeline-item">
-          <span>○</span>
-          <div>
-            <strong>Payment</strong>
-            <small>Pending</small>
-          </div>
-        </div>
-
-      </div>
-
-    </div>
-
-
-    <div class="card">
-
-      <h3>Payment Information</h3>
-
-      <div class="payment-row">
-        <span>Expected Amount</span>
-        <strong>₹1,12,500</strong>
-      </div>
-
-      <div class="payment-row">
-        <span>Status</span>
-        <span class="badge orange">Pending</span>
-      </div>
-
-    </div>
-
-  </section>
-
-
-  <!-- ================= BOTTOM NAV ================= -->
-
-  <nav id="bottomNav">
-
-    <button onclick="showScreen('home')" class="nav-btn active">
-      <span>⌂</span>
-      Home
-    </button>
-
-    <button onclick="showScreen('schedule')" class="nav-btn">
-      <span>📅</span>
-      Schedule
-    </button>
-
-    <button onclick="showScreen('status')" class="nav-btn">
-      <span>📦</span>
-      Status
-    </button>
-
-    <button onclick="showHelp()" class="nav-btn">
-      <span>?</span>
-      Help
-    </button>
-
-  </nav>
-
-
-  <!-- ================= QR MODAL ================= -->
-
-  <div id="qrModal" class="modal">
-
-    <div class="modal-box">
-
-      <button class="close" onclick="closeQR()">×</button>
-
-      <h2>Procurement Token</h2>
-
-      <p>Show this token at the procurement centre.</p>
-
-      <div class="qr">
-        <div class="qr-pattern">
-          ▓ ▓ ░ ▓ ▓ ░ ▓<br>
-          ░ ▓ ▓ ░ ▓ ▓ ░<br>
-          ▓ ░ ▓ ▓ ░ ▓ ▓<br>
-          ▓ ▓ ░ ▓ ▓ ░ ▓<br>
-          ░ ▓ ▓ ░ ▓ ▓ ░
-        </div>
-      </div>
-
-      <h1>#42</h1>
-
-      <p class="muted">
-        Farmer ID: KF-20481
+      <p>
+        Estimated Turn:
+        <strong id="scheduleTurn">-</strong>
       </p>
+
+      <p>📍 Government Procurement Centre</p>
+
+    </div>
+
+    <span class="badge green">Confirmed</span>
+
+  </div>
+
+</section>
+
+
+<!-- ================= STATUS ================= -->
+<section id="status" class="screen">
+
+  <header class="page-header">
+    <h2>Procurement Status</h2>
+    <p>Track your crop procurement</p>
+  </header>
+
+
+  <div class="card status-card">
+
+    <div class="status-header">
+
+      <div>
+        <small>Token Number</small>
+        <h1 id="statusToken">-</h1>
+      </div>
+
+      <span class="badge green">
+        In Queue
+      </span>
+
+    </div>
+
+
+    <div class="timeline">
+
+      <div class="timeline-item done">
+        <span>✓</span>
+        <div>
+          <strong>Registration Complete</strong>
+          <small>Completed</small>
+        </div>
+      </div>
+
+
+      <div class="timeline-item done">
+        <span>✓</span>
+        <div>
+          <strong>Procurement Request</strong>
+          <small>Submitted</small>
+        </div>
+      </div>
+
+
+      <div class="timeline-item current">
+        <span>●</span>
+        <div>
+          <strong>Waiting in Queue</strong>
+          <small>
+            Position: <span id="statusQueue">-</span>
+          </small>
+        </div>
+      </div>
+
+
+      <div class="timeline-item">
+        <span>○</span>
+        <div>
+          <strong>Procurement</strong>
+          <small>Waiting for your turn</small>
+        </div>
+      </div>
+
+
+      <div class="timeline-item">
+        <span>○</span>
+        <div>
+          <strong>Payment</strong>
+          <small>Pending</small>
+        </div>
+      </div>
 
     </div>
 
   </div>
 
 
-  <!-- ================= TOAST ================= -->
+  <div class="card">
 
-  <div id="toast"></div>
+    <h3>Procurement Information</h3>
+
+    <div class="payment-row">
+      <span>Wheat Type</span>
+      <strong id="statusWheat">-</strong>
+    </div>
+
+    <div class="payment-row">
+      <span>Quantity</span>
+      <strong id="statusQuantity">-</strong>
+    </div>
+
+    <div class="payment-row">
+      <span>Rate</span>
+      <strong>₹<span id="statusRate">0</span></strong>
+    </div>
+
+    <div class="payment-row">
+      <span>Total Amount</span>
+      <strong>₹<span id="statusBill">0</span></strong>
+    </div>
+
+    <div class="payment-row">
+      <span>Estimated Turn</span>
+      <strong id="statusTurn">-</strong>
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- ================= BOTTOM NAV ================= -->
+
+<nav id="bottomNav">
+
+  <button onclick="showScreen('home')" class="nav-btn active">
+    <span>⌂</span>
+    Home
+  </button>
+
+  <button onclick="showScreen('schedule')" class="nav-btn">
+    <span>📅</span>
+    Schedule
+  </button>
+
+  <button onclick="showScreen('status')" class="nav-btn">
+    <span>📦</span>
+    Status
+  </button>
+
+  <button onclick="showHelp()" class="nav-btn">
+    <span>?</span>
+    Help
+  </button>
+
+</nav>
+
+
+<!-- ================= QR MODAL ================= -->
+
+<div id="qrModal" class="modal">
+
+  <div class="modal-box">
+
+    <button class="close" onclick="closeQR()">×</button>
+
+    <h2>Procurement Token</h2>
+
+    <p>Show this token at the procurement centre.</p>
+
+    <div class="qr">
+
+      <div class="qr-pattern">
+        ▓ ▓ ░ ▓ ▓ ░ ▓<br>
+        ░ ▓ ▓ ░ ▓ ▓ ░<br>
+        ▓ ░ ▓ ▓ ░ ▓ ▓<br>
+        ▓ ▓ ░ ▓ ▓ ░ ▓<br>
+        ░ ▓ ▓ ░ ▓ ▓ ░
+      </div>
+
+    </div>
+
+    <h1 id="qrToken">-</h1>
+
+    <p class="muted">
+      Farmer ID: <span id="qrFarmer">KF-20481</span>
+    </p>
+
+  </div>
 
 </div>
+
+
+<div id="toast"></div>
+
+</div>
+
+
+<!-- ================= JAVASCRIPT ================= -->
+
 <script>
+
+const API = "http://127.0.0.1:8000";
+
+const prices = {
+  "HD-2967": 2675,
+  "HD-3086": 2700,
+  "DBW-187": 2725,
+  "Other": 2500
+};
+
+
+/* LOGIN */
+
 function sendOTP() {
 
-    const name = document.getElementById("name").value.trim();
-    const mobile = document.getElementById("mobile").value.trim();
+  const name = document.getElementById("name").value.trim();
+  const mobile = document.getElementById("mobile").value.trim();
 
-    if (name === "") {
-        alert("Please enter your name");
-        return;
-    }
+  if (!name) {
+    alert("Please enter your name");
+    return;
+  }
 
-    if (!/^[0-9]{10}$/.test(mobile)) {
-        alert("Please enter a valid 10-digit mobile number");
-        return;
-    }
+  if (!/^[0-9]{10}$/.test(mobile)) {
+    alert("Please enter a valid 10-digit mobile number");
+    return;
+  }
 
-    document.getElementById("otpMobile").textContent =
-        "******" + mobile.slice(-4);
+  document.getElementById("otpMobile").textContent =
+    "******" + mobile.slice(-4);
 
-    document.getElementById("login").classList.remove("active");
-    document.getElementById("otp").classList.add("active");
+  showScreen("otp");
 
-    document.getElementById("bottomNav").style.display = "none";
+  document.getElementById("bottomNav").style.display = "none";
 }
 
+
+/* OTP */
 
 function verifyOTP() {
 
-    const otp = document.getElementById("otpInput").value.trim();
+  const otp = document.getElementById("otpInput").value.trim();
 
-    if (otp !== "123456") {
-        alert("Invalid OTP. Demo OTP is 123456");
-        return;
-    }
+  if (otp !== "123456") {
+    alert("Invalid OTP. Demo OTP is 123456");
+    return;
+  }
 
-    const name = document.getElementById("name").value.trim();
+  const name = document.getElementById("name").value.trim();
 
-    document.getElementById("otp").classList.remove("active");
-    document.getElementById("home").classList.add("active");
+  document.getElementById("welcomeName").textContent =
+    "Namaste, " + name + " 👋";
 
-    document.getElementById("welcomeName").textContent =
-        "Namaste, " + name + " 👋";
+  showScreen("procurement");
 
-    document.getElementById("bottomNav").style.display = "flex";
+  document.getElementById("bottomNav").style.display = "none";
 }
 
+
+/* SCREEN */
 
 function showScreen(screenName) {
 
-    document.querySelectorAll(".screen").forEach(function(screen) {
-        screen.classList.remove("active");
-    });
+  document.querySelectorAll(".screen").forEach(screen => {
+    screen.classList.remove("active");
+  });
 
-    document.getElementById(screenName).classList.add("active");
+  document.getElementById(screenName).classList.add("active");
 
-    const nav = document.getElementById("bottomNav");
+  const nav = document.getElementById("bottomNav");
 
-    if (screenName === "login" || screenName === "otp") {
-        nav.style.display = "none";
-    } else {
-        nav.style.display = "flex";
-    }
+  if (screenName === "login" ||
+      screenName === "otp" ||
+      screenName === "procurement") {
+
+    nav.style.display = "none";
+
+  } else {
+
+    nav.style.display = "flex";
+  }
 }
 
 
+/* BILL CALCULATION */
+
+function calculateBill() {
+
+  const wheat = document.getElementById("wheatType").value;
+  const quantity =
+    Number(document.getElementById("quantity").value) || 0;
+
+  const rate = prices[wheat] || 0;
+  const total = rate * quantity;
+
+  document.getElementById("rate").textContent =
+    rate.toLocaleString("en-IN");
+
+  document.getElementById("totalBill").textContent =
+    total.toLocaleString("en-IN");
+}
+
+
+/* JOIN QUEUE */
+
+async function joinQueue() {
+
+  const name =
+    document.getElementById("name").value.trim();
+
+  const mobile =
+    document.getElementById("mobile").value.trim();
+
+  const wheat =
+    document.getElementById("wheatType").value;
+
+  const quantity =
+    Number(document.getElementById("quantity").value);
+
+
+  if (!wheat) {
+    alert("Please select wheat variety");
+    return;
+  }
+
+  if (!quantity || quantity <= 0) {
+    alert("Please enter valid quantity");
+    return;
+  }
+
+
+  try {
+
+    const response = await fetch(API + "/procurement", {
+
+      method: "POST",
+
+      headers: {
+        "Content-Type": "application/json"
+      },
+
+      body: JSON.stringify({
+        name: name,
+        mobile: mobile,
+        wheat_type: wheat,
+        quantity: quantity
+      })
+
+    });
+
+
+    const data = await response.json();
+
+
+    if (!response.ok) {
+      alert(data.detail || "Unable to join queue");
+      return;
+    }
+
+
+    updateProcurement(data);
+
+    showScreen("home");
+
+    document.getElementById("bottomNav").style.display = "flex";
+
+    alert(
+      "Successfully joined queue!\n\n" +
+      "Token: " + data.token +
+      "\nQueue Position: " + data.queue_position +
+      "\nTotal Bill: ₹" +
+      Number(data.total_bill).toLocaleString("en-IN")
+    );
+
+  } catch (error) {
+
+    alert(
+      "Backend is not running.\n\n" +
+      "Start FastAPI using:\n" +
+      "uvicorn main:app --reload"
+    );
+  }
+}
+
+
+/* UPDATE ALL SCREENS */
+
+function updateProcurement(data) {
+
+  const bill =
+    Number(data.total_bill).toLocaleString("en-IN");
+
+
+  /* HOME */
+
+  document.getElementById("homeWheat").textContent =
+    data.wheat_type;
+
+  document.getElementById("homeQuantity").textContent =
+    data.quantity + " Q";
+
+  document.getElementById("homeToken").textContent =
+    data.token;
+
+  document.getElementById("homeBill").textContent =
+    "₹" + bill;
+
+  document.getElementById("homeQueue").textContent =
+    "#" + data.queue_position;
+
+  document.getElementById("homeTurn").textContent =
+    formatTime(data.estimated_turn);
+
+  document.getElementById("queueMessage").textContent =
+    "You are #" + data.queue_position +
+    " in the procurement queue.";
+
+
+  /* SCHEDULE */
+
+  document.getElementById("scheduleQueue").textContent =
+    data.queue_position;
+
+  document.getElementById("scheduleTurn").textContent =
+    formatTime(data.estimated_turn);
+
+
+  /* STATUS */
+
+  document.getElementById("statusToken").textContent =
+    data.token;
+
+  document.getElementById("statusQueue").textContent =
+    "#" + data.queue_position;
+
+  document.getElementById("statusWheat").textContent =
+    data.wheat_type;
+
+  document.getElementById("statusQuantity").textContent =
+    data.quantity + " Quintal";
+
+  document.getElementById("statusRate").textContent =
+    Number(data.rate).toLocaleString("en-IN");
+
+  document.getElementById("statusBill").textContent =
+    bill;
+
+  document.getElementById("statusTurn").textContent =
+    formatTime(data.estimated_turn);
+
+
+  /* QR */
+
+  document.getElementById("qrToken").textContent =
+    data.token;
+
+}
+
+
+/* TIME */
+
+function formatTime(time) {
+
+  if (!time) return "-";
+
+  return new Date(time).toLocaleTimeString([], {
+    hour: "2-digit",
+    minute: "2-digit"
+  });
+}
+
+
+/* QR */
+
 function showQR() {
-    document.getElementById("qrModal").classList.add("show");
+  document.getElementById("qrModal").classList.add("show");
 }
 
 
 function closeQR() {
-    document.getElementById("qrModal").classList.remove("show");
+  document.getElementById("qrModal").classList.remove("show");
 }
 
 
-function requestSlot() {
-    alert("Slot request submitted successfully.");
-}
-
+/* OTHER */
 
 function enableSMS() {
-    alert("SMS alerts have been enabled.");
+  alert("SMS alerts enabled.");
 }
 
 
 function showHelp() {
-    alert("Please contact your procurement centre.");
+  alert(
+    "For help, contact your Government Procurement Centre."
+  );
 }
+
 </script>
+
 </body>
 </html>
