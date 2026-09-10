@@ -10,11 +10,10 @@ const user = {
 
 // ================= BACKEND URL =================
 
-// Abhi backend laptop par chal raha hai
 const API_URL = "http://127.0.0.1:8000";
 
 
-// ================= SEND OTP / CONTINUE =================
+// ================= SEND OTP =================
 
 async function sendOTP() {
 
@@ -22,73 +21,59 @@ async function sendOTP() {
   const mobile = document.getElementById("mobile").value.trim();
   const language = document.getElementById("language").value;
 
-  // Check name
   if (name === "") {
     showMessage("Please enter your full name.");
-    document.getElementById("name").focus();
     return;
   }
 
-  // Check mobile
   if (!/^[0-9]{10}$/.test(mobile)) {
     showMessage("Please enter a valid 10-digit mobile number.");
-    document.getElementById("mobile").focus();
     return;
   }
 
-  // Save user information
   user.name = name;
   user.mobile = mobile;
   user.language = language;
 
-  // Convert 10 digit Indian number to +91 format
   const phone = "+91" + mobile;
 
   try {
 
-    showMessage("Sending OTP...");
+    showMessage("Generating OTP...");
 
     const response = await fetch(`${API_URL}/send-otp`, {
-
       method: "POST",
-
       headers: {
         "Content-Type": "application/json"
       },
-
       body: JSON.stringify({
         phone: phone
       })
-
     });
 
     const data = await response.json();
 
-    // Backend error
     if (!response.ok) {
-      throw new Error(data.detail || "Failed to send OTP");
+      throw new Error(data.detail || "Failed to generate OTP");
     }
 
-    // Show last 4 digits on OTP screen
     document.getElementById("otpMobile").textContent =
       "******" + mobile.slice(-4);
 
-    // Clear old OTP
     document.getElementById("otpInput").value = "";
 
-    // Go to OTP screen
     showScreen("otp");
 
     showMessage("OTP generated successfully!");
 
-    console.log("OTP response:", data);
+    console.log(data);
 
   } catch (error) {
 
-    console.error("Send OTP Error:", error);
+    console.error(error);
 
     showMessage(
-      "Unable to send OTP. Please check backend."
+      "Backend se connection nahi ho raha."
     );
   }
 }
@@ -100,7 +85,6 @@ async function verifyOTP() {
 
   const otp = document.getElementById("otpInput").value.trim();
 
-  // Check OTP length
   if (!/^[0-9]{6}$/.test(otp)) {
     showMessage("Please enter the 6-digit OTP.");
     return;
@@ -113,44 +97,36 @@ async function verifyOTP() {
     showMessage("Verifying OTP...");
 
     const response = await fetch(`${API_URL}/verify-otp`, {
-
       method: "POST",
-
       headers: {
         "Content-Type": "application/json"
       },
-
       body: JSON.stringify({
         phone: phone,
         otp: otp
       })
-
     });
 
     const data = await response.json();
 
-    // Backend error
     if (!response.ok) {
       throw new Error(data.detail || "Invalid OTP");
     }
 
-    // Login successful
-    console.log("Login response:", data);
+    console.log(data);
 
-    // Load farmer information
     loadUserData();
 
-    // Go to home
     showScreen("home");
 
     showMessage("Login successful! 🎉");
 
   } catch (error) {
 
-    console.error("Verify OTP Error:", error);
+    console.error(error);
 
     showMessage(
-      error.message || "Invalid OTP. Please try again."
+      error.message || "Invalid OTP"
     );
   }
 }
@@ -172,12 +148,10 @@ function loadUserData() {
 
 function showScreen(screenName) {
 
-  // Hide all screens
   document.querySelectorAll(".screen").forEach(screen => {
     screen.classList.remove("active");
   });
 
-  // Find selected screen
   const screen = document.getElementById(screenName);
 
   if (!screen) {
@@ -185,23 +159,18 @@ function showScreen(screenName) {
     return;
   }
 
-  // Show selected screen
   screen.classList.add("active");
 
-  // Bottom navigation
   const nav = document.getElementById("bottomNav");
 
   if (nav) {
-
     if (screenName === "login" || screenName === "otp") {
       nav.style.display = "none";
     } else {
       nav.style.display = "flex";
     }
-
   }
 
-  // Update active navigation button
   document.querySelectorAll(".nav-btn").forEach(button => {
     button.classList.remove("active");
   });
@@ -218,7 +187,6 @@ function showScreen(screenName) {
     document.querySelectorAll(".nav-btn")[2]?.classList.add("active");
   }
 
-  // Scroll to top
   window.scrollTo({
     top: 0,
     behavior: "smooth"
@@ -229,22 +197,12 @@ function showScreen(screenName) {
 // ================= QR MODAL =================
 
 function showQR() {
-
-  document
-    .getElementById("qrModal")
-    .classList.add("show");
+  document.getElementById("qrModal").classList.add("show");
 }
-
 
 function closeQR() {
-
-  document
-    .getElementById("qrModal")
-    .classList.remove("show");
+  document.getElementById("qrModal").classList.remove("show");
 }
-
-
-// Close QR when clicking outside
 
 document.addEventListener("click", function(event) {
 
@@ -260,30 +218,21 @@ document.addEventListener("click", function(event) {
 // ================= REQUEST SLOT =================
 
 function requestSlot() {
-
-  showMessage(
-    "Slot request submitted successfully."
-  );
+  showMessage("Slot request submitted successfully.");
 }
 
 
 // ================= SMS ALERT =================
 
 function enableSMS() {
-
-  showMessage(
-    "SMS alerts have been enabled."
-  );
+  showMessage("SMS alerts have been enabled.");
 }
 
 
 // ================= HELP =================
 
 function showHelp() {
-
-  showMessage(
-    "Please contact your local procurement centre."
-  );
+  showMessage("Please contact your local procurement centre.");
 }
 
 
@@ -301,15 +250,12 @@ function showMessage(message) {
   }
 
   toast.textContent = message;
-
   toast.classList.add("show");
 
   clearTimeout(toastTimer);
 
   toastTimer = setTimeout(() => {
-
     toast.classList.remove("show");
-
   }, 3000);
 }
 
@@ -318,49 +264,27 @@ function showMessage(message) {
 
 document.addEventListener("DOMContentLoaded", function() {
 
-  // Continue button
   const continueBtn =
     document.getElementById("continueBtn");
 
   if (continueBtn) {
-
-    continueBtn.addEventListener(
-      "click",
-      sendOTP
-    );
-
+    continueBtn.addEventListener("click", sendOTP);
   }
 
-
-  // Verify button
   const verifyBtn =
     document.getElementById("verifyBtn");
 
   if (verifyBtn) {
-
-    verifyBtn.addEventListener(
-      "click",
-      verifyOTP
-    );
-
+    verifyBtn.addEventListener("click", verifyOTP);
   }
 
-
-  // Resend OTP
   const resendBtn =
     document.getElementById("resendBtn");
 
   if (resendBtn) {
-
-    resendBtn.addEventListener(
-      "click",
-      sendOTP
-    );
-
+    resendBtn.addEventListener("click", sendOTP);
   }
 
-
-  // Start on login page
   showScreen("login");
 
 });
