@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KisanProcure</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div class="app">
+
+  <!-- ================= LOGIN ================= -->
+  <section id="login" class="screen active">
+    <div class="login-box">
+
+      <div class="logo">🌾</div>
+
+      <h1>KisanProcure</h1>
+      <p class="subtitle">Farmer Procurement Portal</p>
+
+      <div class="form">
+
+        <label>Full Name</label>
+        <input
+          id="name"
+          type="text"
+          placeholder="Enter your full name"
+        >
+
+        <label>Mobile Number</label>
+        <input
+          id="mobile"
+          type="tel"
+          maxlength="10"
+          placeholder="Enter 10-digit mobile number"
+        >
+
+        <label>Language</label>
+        <select id="language">
+          <option value="en">English</option>
+          <option value="hi">हिन्दी</option>
+        </select>
+
+        <button onclick="sendOTP()">
+          Continue
+        </button>
+
+      </div>
+
+      <p class="login-note">
+        Your mobile number will be used for OTP verification.
+      </p>
+
+    </div>
+  </section>
+
+
+  <!-- ================= OTP ================= -->
+  <section id="otp" class="screen">
+
+    <div class="login-box">
+
+      <div class="logo">🔐</div>
+
+      <h2>Verify Mobile</h2>
+
+      <p class="subtitle">
+        OTP sent to <strong id="otpMobile"></strong>
+      </p>
+
+      <input
+        id="otpInput"
+        class="otp-input"
+        type="tel"
+        maxlength="6"
+        placeholder="Enter 6-digit OTP"
+      >
+
+      <button onclick="verifyOTP()">
+        Verify OTP
+      </button>
+
+      <button class="secondary" onclick="sendOTP()">
+        Resend OTP
+      </button>
+
+      <p class="demo">
+        Demo OTP: <strong>123456</strong>
+      </p>
+
+    </div>
+
+  </section>
+
+
+  <!-- ================= HOME ================= -->
+  <section id="home" class="screen">
+
+    <header class="topbar">
+      <div>
+        <small>Welcome</small>
+        <h2 id="welcomeName">Namaste 👋</h2>
+      </div>
+
+      <div class="profile">👨‍🌾</div>
+    </header>
+
+
+    <div class="alert">
+      <strong>📢 Important</strong>
+      <p>
+        Your procurement schedule is available.
+        Please check your slot.
+      </p>
+    </div>
+
+
+    <div class="card farmer-card">
+
+      <div>
+        <small>Farmer ID</small>
+        <h3 id="farmerId">KF-20481</h3>
+      </div>
+
+      <div class="verified">
+        ✓ Verified
+      </div>
+
+    </div>
+
+
+    <h3 class="section-title">Today's Overview</h3>
+
+    <div class="grid">
+
+      <div class="stat-card">
+        <span>🌾</span>
+        <small>Crop</small>
+        <strong>Wheat</strong>
+      </div>
+
+      <div class="stat-card">
+        <span>⚖️</span>
+        <small>Quantity</small>
+        <strong>42 Quintal</strong>
+      </div>
+
+      <div class="stat-card">
+        <span>🎫</span>
+        <small>Token</small>
+        <strong>#42</strong>
+      </div>
+
+      <div class="stat-card">
+        <span>💰</span>
+        <small>Payment</small>
+        <strong>₹1,12,500</strong>
+      </div>
+
+    </div>
+
+
+    <div class="card schedule-card">
+
+      <div class="card-heading">
+        <div>
+          <small>Procurement Slot</small>
+          <h3>Today, 10:00 AM</h3>
+        </div>
+
+        <span class="badge green">Confirmed</span>
+      </div>
+
+      <p>Government Procurement Centre</p>
+
+      <button onclick="showQR()">
+        View QR Token
+      </button>
+
+    </div>
+
+
+    <div class="card">
+
+      <h3>Quick Actions</h3>
+
+      <div class="actions">
+
+        <button onclick="showScreen('schedule')">
+          📅<span>Schedule</span>
+        </button>
+
+        <button onclick="showScreen('status')">
+          📦<span>Status</span>
+        </button>
+
+        <button onclick="enableSMS()">
+          🔔<span>SMS Alerts</span>
+        </button>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- ================= SCHEDULE ================= -->
+  <section id="schedule" class="screen">
+
+    <header class="page-header">
+      <h2>Procurement Schedule</h2>
+      <p>Your upcoming procurement slots</p>
+    </header>
+
+
+    <div class="card schedule-item">
+
+      <div class="date-box">
+        <strong>12</strong>
+        <small>SEP</small>
+      </div>
+
+      <div class="schedule-info">
+        <h3>Wheat Procurement</h3>
+        <p>10:00 AM – 12:00 PM</p>
+        <p>📍 Government Procurement Centre</p>
+      </div>
+
+      <span class="badge green">Confirmed</span>
+
+    </div>
+
+
+    <div class="card schedule-item">
+
+      <div class="date-box">
+        <strong>18</strong>
+        <small>SEP</small>
+      </div>
+
+      <div class="schedule-info">
+        <h3>Additional Slot</h3>
+        <p>11:00 AM – 01:00 PM</p>
+        <p>📍 Government Procurement Centre</p>
+      </div>
+
+      <span class="badge orange">Pending</span>
+
+    </div>
+
+
+    <button onclick="requestSlot()">
+      + Request New Slot
+    </button>
+
+  </section>
+
+
+  <!-- ================= STATUS ================= -->
+  <section id="status" class="screen">
+
+    <header class="page-header">
+      <h2>Procurement Status</h2>
+      <p>Track your crop procurement</p>
+    </header>
+
+
+    <div class="card status-card">
+
+      <div class="status-header">
+        <div>
+          <small>Token Number</small>
+          <h1>#42</h1>
+        </div>
+
+        <span class="badge green">
+          In Progress
+        </span>
+      </div>
+
+
+      <div class="timeline">
+
+        <div class="timeline-item done">
+          <span>✓</span>
+          <div>
+            <strong>Registration Complete</strong>
+            <small>Completed</small>
+          </div>
+        </div>
+
+        <div class="timeline-item done">
+          <span>✓</span>
+          <div>
+            <strong>Slot Confirmed</strong>
+            <small>Today, 08:30 AM</small>
+          </div>
+        </div>
+
+        <div class="timeline-item current">
+          <span>●</span>
+          <div>
+            <strong>Crop Verification</strong>
+            <small>Currently processing</small>
+          </div>
+        </div>
+
+        <div class="timeline-item">
+          <span>○</span>
+          <div>
+            <strong>Procurement</strong>
+            <small>Pending</small>
+          </div>
+        </div>
+
+        <div class="timeline-item">
+          <span>○</span>
+          <div>
+            <strong>Payment</strong>
+            <small>Pending</small>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <div class="card">
+
+      <h3>Payment Information</h3>
+
+      <div class="payment-row">
+        <span>Expected Amount</span>
+        <strong>₹1,12,500</strong>
+      </div>
+
+      <div class="payment-row">
+        <span>Status</span>
+        <span class="badge orange">Pending</span>
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- ================= BOTTOM NAV ================= -->
+
+  <nav id="bottomNav">
+
+    <button onclick="showScreen('home')" class="nav-btn active">
+      <span>⌂</span>
+      Home
+    </button>
+
+    <button onclick="showScreen('schedule')" class="nav-btn">
+      <span>📅</span>
+      Schedule
+    </button>
+
+    <button onclick="showScreen('status')" class="nav-btn">
+      <span>📦</span>
+      Status
+    </button>
+
+    <button onclick="showHelp()" class="nav-btn">
+      <span>?</span>
+      Help
+    </button>
+
+  </nav>
+
+
+  <!-- ================= QR MODAL ================= -->
+
+  <div id="qrModal" class="modal">
+
+    <div class="modal-box">
+
+      <button class="close" onclick="closeQR()">×</button>
+
+      <h2>Procurement Token</h2>
+
+      <p>Show this token at the procurement centre.</p>
+
+      <div class="qr">
+        <div class="qr-pattern">
+          ▓ ▓ ░ ▓ ▓ ░ ▓<br>
+          ░ ▓ ▓ ░ ▓ ▓ ░<br>
+          ▓ ░ ▓ ▓ ░ ▓ ▓<br>
+          ▓ ▓ ░ ▓ ▓ ░ ▓<br>
+          ░ ▓ ▓ ░ ▓ ▓ ░
+        </div>
+      </div>
+
+      <h1>#42</h1>
+
+      <p class="muted">
+        Farmer ID: KF-20481
+      </p>
+
+    </div>
+
+  </div>
+
+
+  <!-- ================= TOAST ================= -->
+
+  <div id="toast"></div>
+
+</div>
+<script>
+function sendOTP() {
+
+    const name = document.getElementById("name").value.trim();
+    const mobile = document.getElementById("mobile").value.trim();
+
+    if (name === "") {
+        alert("Please enter your name");
+        return;
+    }
+
+    if (!/^[0-9]{10}$/.test(mobile)) {
+        alert("Please enter a valid 10-digit mobile number");
+        return;
+    }
+
+    document.getElementById("otpMobile").textContent =
+        "******" + mobile.slice(-4);
+
+    document.getElementById("login").classList.remove("active");
+    document.getElementById("otp").classList.add("active");
+
+    document.getElementById("bottomNav").style.display = "none";
+}
+
+
+function verifyOTP() {
+
+    const otp = document.getElementById("otpInput").value.trim();
+
+    if (otp !== "123456") {
+        alert("Invalid OTP. Demo OTP is 123456");
+        return;
+    }
+
+    const name = document.getElementById("name").value.trim();
+
+    document.getElementById("otp").classList.remove("active");
+    document.getElementById("home").classList.add("active");
+
+    document.getElementById("welcomeName").textContent =
+        "Namaste, " + name + " 👋";
+
+    document.getElementById("bottomNav").style.display = "flex";
+}
+
+
+function showScreen(screenName) {
+
+    document.querySelectorAll(".screen").forEach(function(screen) {
+        screen.classList.remove("active");
+    });
+
+    document.getElementById(screenName).classList.add("active");
+
+    const nav = document.getElementById("bottomNav");
+
+    if (screenName === "login" || screenName === "otp") {
+        nav.style.display = "none";
+    } else {
+        nav.style.display = "flex";
+    }
+}
+
+
+function showQR() {
+    document.getElementById("qrModal").classList.add("show");
+}
+
+
+function closeQR() {
+    document.getElementById("qrModal").classList.remove("show");
+}
+
+
+function requestSlot() {
+    alert("Slot request submitted successfully.");
+}
+
+
+function enableSMS() {
+    alert("SMS alerts have been enabled.");
+}
+
+
+function showHelp() {
+    alert("Please contact your procurement centre.");
+}
+</script>
+</body>
+</html>
